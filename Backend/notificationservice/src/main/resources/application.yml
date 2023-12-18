@@ -1,0 +1,44 @@
+spring:
+  profiles:
+    active: development
+  application:
+    name: Otp-Service
+     
+  data:
+    mongodb:
+      uri: "mongodb+srv://cryptobankhub:dn5KpCLxe7J3Gu9d@cryptobankhub.gv9a2cv.mongodb.net/?retryWrites=true&w=majority"
+      database: Cbh-Notification
+      
+server:
+  port: 1010
+---
+
+spring:
+  config:
+    activate:
+      on-profile: development
+         
+  jpa:
+    show-sql: true
+    
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: cryptobankhub@gmail.com
+    password: wsvsxukugxdrycde
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: production
+
+  jpa:
+    show-sql: false

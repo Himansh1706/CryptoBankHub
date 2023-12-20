@@ -1,0 +1,69 @@
+<div class="login-container mx-auto p-4">
+  <div class="left-div">
+    <!-- <img src="images/Finance leaders-rafiki.png" alt="sign-in"> -->
+  </div>
+  <div>
+
+    <!-- LOGIN MENU -->
+
+    <div class="active" id="login-menu">
+      <div class="right-div-box text-center">
+        <form #loginForm="ngForm" (ngSubmit)="onLoginSubmit()">
+          <div class="heading-box">
+            <h4>Login to <br> Your Account</h4>
+          </div>
+          <div class="email-box input-box">
+              <i class="fas fa-envelope"></i>
+              <input type="email" name="email" id="email" placeholder="Email Address" [(ngModel)]="loginModel.email" required />
+          </div>
+          <div class="password-box input-box">
+            <i class="fas fa-lock"></i>
+            <input type="password" name="password" id="password" placeholder="Password" [(ngModel)]="loginModel.password" required  />
+          </div>
+          <div class="login-btn">
+            <button [disabled]="!loginForm.valid" type="submit">LOGIN</button>
+          </div>
+          <div>
+            <hr class="divider-line">
+          </div>
+          <div class="create-new-account-box">Create New Account<br>
+            <a id="create-new-account-btn">Sign Up</a>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- SIGN UP MENU -->
+
+    <div class="inactive" id="sign-up-menu">
+      <div class="right-div-box text-center">
+        <div>
+          <div class="heading-box">
+            <h4>Create Your Account</h4>
+          </div>
+          <div class="input-box">
+              <i class="fas fa-envelope"></i>
+              <input type="text" name="mobileNumber" id="mobileNumber" placeholder="Email Address" />
+          </div>
+          <div class="inactive" id="otp-input-field">
+            <div class="input-box">
+              <i class="fas fa-lock"></i>
+              <input type="password" name="otp" id="otp" placeholder="6-Digit OTP" maxlength="6" />
+            </div>
+          </div>
+          <div class="login-btn">
+            <button (click)="sendOtp()" class="active" id="send-otp-btn">SEND OTP</button>
+            <button (click)="verifyOtp()" class="inactive" id="verify-otp-btn">VERIFY OTP</button>
+          </div>
+          <div>
+            <hr class="divider-line">
+          </div>
+          <div class="already-has-account-box">
+            Already has an account? <br>
+            <a id="already-has-account-btn">Sign in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

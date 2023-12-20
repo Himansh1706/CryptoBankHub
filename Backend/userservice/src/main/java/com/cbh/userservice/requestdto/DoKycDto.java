@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DoKyc {
+public class DoKycDto {
 	
 	private String email;
 	private String aadharCard;

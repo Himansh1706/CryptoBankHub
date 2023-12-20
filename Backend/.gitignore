@@ -1,2 +1,36 @@
 /.metadata/
 .sonarlint
+userservice/HELP.md
+userservice/target/
+!userservice/.mvn/wrapper/maven-wrapper.jar
+!userservice/**/src/main/**/target/
+!userservice/**/src/test/**/target/
+
+### STS ###
+userservice/.apt_generated
+userservice/.classpath
+userservice/.factorypath
+userservice/.project
+userservice/.settings
+userservice/.springBeans
+userservice/.sts4-cache
+
+### IntelliJ IDEA ###
+userservice/.idea
+userservice/*.iws
+userservice/*.iml
+userservice/*.ipr
+
+### NetBeans ###
+userservice/nbproject/private/
+userservice/nbbuild/
+userservice/dist/
+userservice/nbdist/
+userservice/.nb-gradle/
+userserviceuserservice/build/
+!userservice/**/src/main/**/build/
+!userservice/**/src/test/**/build/
+
+### VS Code ###
+userservice/.vscode/
+

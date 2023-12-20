@@ -1,8 +1,8 @@
 package com.cbh.userservice.service;
 
 import com.cbh.userservice.models.User;
-import com.cbh.userservice.requestdto.AddUser;
-import com.cbh.userservice.requestdto.DoKyc;
+import com.cbh.userservice.requestdto.AddUserDto;
+import com.cbh.userservice.requestdto.DoKycDto;
 
 /**
  * Service interface for managing user-related operations.
@@ -15,7 +15,7 @@ public interface UserService {
      * @param addUser The information of the user to be added.
      * @return The user object representing the added user.
      */
-    User addUser(AddUser addUser);
+    User addUser(AddUserDto addUser);
 
     /**
      * Performs KYC (Know Your Customer) for a user.
@@ -23,7 +23,7 @@ public interface UserService {
      * @param doKyc The KYC information to be processed.
      * @return The user object representing the user after KYC.
      */
-    User kyc(DoKyc doKyc);
+    User kyc(DoKycDto doKyc);
 
     /**
      * Retrieves a user by their user ID.

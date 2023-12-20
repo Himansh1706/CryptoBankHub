@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cbh.userservice.models.User;
-import com.cbh.userservice.requestdto.AddUser;
-import com.cbh.userservice.requestdto.DoKyc;
+import com.cbh.userservice.requestdto.AddUserDto;
+import com.cbh.userservice.requestdto.DoKycDto;
 import com.cbh.userservice.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,9 +36,8 @@ public class UserController {
      */
     @PostMapping("")
     @ApiOperation(value = "Add a new user")
-    public ResponseEntity<User> add(@RequestBody AddUser addUser) {
-        User user = userService.addUser(addUser);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<User> add(@RequestBody AddUserDto addUserDto) {
+        return ResponseEntity.ok(userService.addUser(addUserDto));
     }
 
     /**
@@ -49,8 +48,8 @@ public class UserController {
      */
     @PostMapping("/kyc")
     @ApiOperation(value = "Perform KYC for a user")
-    public ResponseEntity<User> kyc(@RequestBody DoKyc doKyc) {
-        User user = userService.kyc(doKyc);
+    public ResponseEntity<User> kyc(@RequestBody DoKycDto doKycDto) {
+        User user = userService.kyc(doKycDto);
         return ResponseEntity.ok(user);
     }
 

@@ -13,9 +13,10 @@ import com.cbh.userservice.requestdto.AddUserDto;
 import com.cbh.userservice.requestdto.DoKycDto;
 import com.cbh.userservice.service.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+
 
 /**
  * Controller class for managing user-related operations.
@@ -23,7 +24,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
-@Api(tags = "User Controller", value = "Operations related to users")
+@ApiResponse(description = "Operations related to users")
 public class UserController {
 
     private final UserService userService;
@@ -35,7 +36,7 @@ public class UserController {
      * @return ResponseEntity containing the added user.
      */
     @PostMapping("")
-    @ApiOperation(value = "Add a new user")
+    @Operation(tags = "Add a new user")
     public ResponseEntity<User> add(@RequestBody AddUserDto addUserDto) {
         return ResponseEntity.ok(userService.addUser(addUserDto));
     }
@@ -47,7 +48,7 @@ public class UserController {
      * @return ResponseEntity containing the user after KYC.
      */
     @PostMapping("/kyc")
-    @ApiOperation(value = "Perform KYC for a user")
+    @Operation(tags = "Perform KYC for a user")
     public ResponseEntity<User> kyc(@RequestBody DoKycDto doKycDto) {
         User user = userService.kyc(doKycDto);
         return ResponseEntity.ok(user);
@@ -60,7 +61,7 @@ public class UserController {
      * @return ResponseEntity containing the user with the specified ID.
      */
     @GetMapping("/{userId}")
-    @ApiOperation(value = "Get user by ID")
+    @Operation(tags = "Get user by ID")
     public ResponseEntity<User> userById(@PathVariable String userId) {
         return ResponseEntity.ok(userService.fetchUserById(userId));
     }

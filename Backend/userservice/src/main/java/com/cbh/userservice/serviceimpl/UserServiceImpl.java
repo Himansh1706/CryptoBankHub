@@ -18,15 +18,13 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService{
-
 	
 	private final ModelMapper mapper;
 	
 	private final UserRepository userRepository;
 	
 	public User addUser(AddUserDto addUserDto) {
-		 userRepository.findByEmail(addUserDto.getEmail())
-         .ifPresent(existingUser -> {});		
+		userRepository.findByEmail(addUserDto.getEmail()).ifPresent(existingUser -> {});		
 		User user=mapper.map(addUserDto, User.class);
 		Address address=mapper.map(addUserDto, Address.class);
 		user.setKycStatus(Constant.KYCSTATUS_NOTINITIALISED);

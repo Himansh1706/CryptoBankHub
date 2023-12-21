@@ -162,6 +162,7 @@ public class OtpServiceImpl implements OtpService {
 		javamailService.sendEmail(emailOtpRequestDto.email(), subject, generatedOTP);
 		isEmailSent = true;
 
+		//To be deleted later
 		KafkaTopicConfig.createTopic("userNotifications", 4, 3);
 
 		KafkaNotificationRequestDto kafkaNotificationRequestDto = new KafkaNotificationRequestDto(

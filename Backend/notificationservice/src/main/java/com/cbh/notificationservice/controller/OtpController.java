@@ -25,6 +25,7 @@ public class OtpController {
 	@Operation(summary = "Send OTP to Email")
 	@PostMapping("/email/send")
 	ResponseEntity<EmailOtpResponseDto> sendOtpToEmail(@RequestBody EmailOtpRequestDto emailOtpRequestDto) {
+		
 		return ResponseEntity.ok(otpService.sendOtpToEmail(emailOtpRequestDto));
 	}
 

@@ -7,24 +7,31 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.Instant;
 import org.springframework.stereotype.Service;
-import com.cbh.notificationservice.exception.NotFoundException;
+import com.cbh.exceptionservice.exception.ExpiredException;
+import com.cbh.exceptionservice.exception.NotFoundException;
+import com.cbh.exceptionservice.exception.UserBlockedException;
+import com.cbh.notificationservice.config.KafkaPublisher;
 import com.cbh.notificationservice.model.Otp;
 import com.cbh.notificationservice.repository.OtpRepository;
 import com.cbh.notificationservice.requestdto.EmailOtpRequestDto;
+import com.cbh.notificationservice.requestdto.KafkaNotificationRequestDto;
 import com.cbh.notificationservice.responsedto.EmailOtpResponseDto;
 import com.cbh.notificationservice.service.JavamailService;
 import com.cbh.notificationservice.service.OtpService;
 import com.cbh.notificationservice.util.Constant;
-import jakarta.mail.MessagingException;
+import com.cryptobankhub.kafkaservice.config.KafkaTopicConfig;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class OtpServiceImpl implements OtpService {
 
 	private final OtpRepository otpRepository;
 	private final JavamailService javamailService;
-
+	private final KafkaPublisher kafkaPublisher;
 	private static final int OTP_LENGTH = 6;
 
 	@Override
@@ -75,7 +82,7 @@ public class OtpServiceImpl implements OtpService {
 	@Override
 	public Integer generateOTP(String email) {
 		if (isUserBlocked(email)) {
-			throw new NotFoundException(Constant.FIELD_EMAIL, Constant.MESSAGE_ACCOUNT_BLOCKED);
+			throw new UserBlockedException(Constant.FIELD_EMAIL, Constant.MESSAGE_ACCOUNT_BLOCKED);
 		}
 		if (userAlreadyGeneratedOtp(email)) {
 			throw new NotFoundException(Constant.FIELD_EMAIL, Constant.MESSAGE_WAIT_FOR_OTP);
@@ -111,11 +118,10 @@ public class OtpServiceImpl implements OtpService {
 	public boolean isOtpValid(String email, Integer emailOtp) {
 		String encryptedEnteredOtp = encryptOtp(emailOtp);
 		boolean isOtpValid;
-		Otp user = otpRepository.findByEmail(email)
-				.orElseThrow(() -> new NotFoundException("Email", "Not found"));
+		Otp user = otpRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email", "Not found"));
 
 		if (user.isBlocked()) {
-			throw new NotFoundException(Constant.FIELD_OTP, Constant.MESSAGE_ACCOUNT_BLOCKED);
+			throw new UserBlockedException(Constant.FIELD_OTP, Constant.MESSAGE_ACCOUNT_BLOCKED);
 		}
 
 		int failedAttempts = user.getFailedAttempts();
@@ -124,7 +130,7 @@ public class OtpServiceImpl implements OtpService {
 			if (isOtpExpired(user.getCreatedTime())) {
 				user.setExpired(true);
 				otpRepository.save(user);
-				throw new NotFoundException(Constant.FIELD_OTP, Constant.MESSAGE_EXPIRED_OTP);
+				throw new ExpiredException(Constant.FIELD_OTP, Constant.MESSAGE_EXPIRED_OTP);
 			}
 
 			failedAttempts++;
@@ -132,8 +138,8 @@ public class OtpServiceImpl implements OtpService {
 			if (!encryptedEnteredOtp.equals(user.getGeneratedOtp())) {
 				user.setFailedAttempts(failedAttempts);
 				otpRepository.save(user);
-				throw new NotFoundException(Constant.FIELD_OTP, Constant.MESSAGE_INCORRECT_OTP
-						+ (3 - failedAttempts) + Constant.MESSAGE_ATTEMPTS_REMAINING);
+				throw new NotFoundException(Constant.FIELD_OTP,
+						Constant.MESSAGE_INCORRECT_OTP + (3 - failedAttempts) + Constant.MESSAGE_ATTEMPTS_REMAINING);
 			} else {
 				isOtpValid = true;
 				user.setFailedAttempts(0);
@@ -142,7 +148,7 @@ public class OtpServiceImpl implements OtpService {
 		} else {
 			user.setBlocked(true);
 			otpRepository.save(user);
-			throw new NotFoundException(Constant.FIELD_EMAIL, Constant.MESSAGE_ACCOUNT_BLOCKED);
+			throw new UserBlockedException(Constant.FIELD_EMAIL, Constant.MESSAGE_ACCOUNT_BLOCKED);
 		}
 
 		return isOtpValid;
@@ -152,15 +158,18 @@ public class OtpServiceImpl implements OtpService {
 	public EmailOtpResponseDto sendOtpToEmail(EmailOtpRequestDto emailOtpRequestDto) {
 		boolean isEmailSent;
 		Integer generatedOTP = generateOTP(emailOtpRequestDto.email());
-		try {
-			String subject = Constant.EMAIL_TYPE.getOrDefault(emailOtpRequestDto.emailType(),
-					"Default Subject");
-			javamailService.sendEmail(emailOtpRequestDto.email(), subject, generatedOTP);
-			isEmailSent = true;
-		} catch (MessagingException e) {
-			throw new NotFoundException(Constant.FIELD_EMAIL,
-					Constant.MESSAGE_SENDING_OTP_ERROR + e.getMessage());
-		}
+		String subject = Constant.EMAIL_TYPE.getOrDefault(emailOtpRequestDto.emailType(), "Default Subject");
+		javamailService.sendEmail(emailOtpRequestDto.email(), subject, generatedOTP);
+		isEmailSent = true;
+
+		KafkaTopicConfig.createTopic("userNotifications", 4, 3);
+
+		KafkaNotificationRequestDto kafkaNotificationRequestDto = new KafkaNotificationRequestDto(
+				"This Otp is sent from kafka " + generatedOTP, "userNotifications", "uno", emailOtpRequestDto.email(), "Send Otp");
+		
+		kafkaPublisher.sendNotifcationToMail(kafkaNotificationRequestDto,
+				(topic, response) -> log.info("Published message {} successfully on topic {}", response, topic));
+		
 		return new EmailOtpResponseDto(emailOtpRequestDto.email(), isEmailSent);
 	}
 

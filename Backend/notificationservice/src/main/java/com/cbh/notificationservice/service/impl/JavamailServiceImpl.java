@@ -16,14 +16,32 @@ public class JavamailServiceImpl implements JavamailService {
 
 	private final JavaMailSender mailSender;
 
-	public void sendEmail(String recipientEmail, String subject, Integer otp) throws MessagingException {
+	public void sendEmail(String recipientEmail, String subject, Integer otp) {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
-		helper.setTo(recipientEmail);
-		helper.setSubject(subject);
-		String emailBody = String.format("Your 6 digit Otp is : %s", otp);
-		helper.setText(emailBody, true);
-		mailSender.send(message);
+		try {
+			helper.setTo(recipientEmail);
+			helper.setSubject(subject);
+			String emailBody = String.format("Your 6 digit Otp is : %s", otp);
+			helper.setText(emailBody, true);
+			mailSender.send(message);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void sendNotification(String recipientEmail, String subject, String text) {
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		try {
+			helper.setTo(recipientEmail);
+			helper.setText(text);
+			helper.setSubject(subject);
+			mailSender.send(message);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

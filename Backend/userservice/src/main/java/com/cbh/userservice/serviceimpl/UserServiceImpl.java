@@ -3,6 +3,7 @@ package com.cbh.userservice.serviceimpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.cbh.exceptionservice.exception.NotFoundException;
 import com.cbh.userservice.models.Address;
 import com.cbh.userservice.models.User;
 import com.cbh.userservice.repository.UserRepository;
@@ -11,6 +12,7 @@ import com.cbh.userservice.requestdto.DoKycDto;
 import com.cbh.userservice.service.UserService;
 import com.cbh.userservice.util.Constant;
 import java.util.Objects;
+
 import com.cbh.userservice.models.Kyc;
 
 import lombok.RequiredArgsConstructor;
@@ -46,12 +48,18 @@ public class UserServiceImpl implements UserService{
 		return user;
 	}
 	
+	public String getKycStatus(String userId) {
+		User user=fetchUserById(userId);
+		return user.getKycStatus();
+	}
+	
 	public User fetchUserByEmail(String email) {
 	    return userRepository.findByEmail(email).orElseThrow();
 	}
 
 	public User fetchUserById(String userId) {
-	    return userRepository.findByUserId(userId).orElseThrow();
+		return userRepository.findByUserId(userId)
+		        .orElseThrow(() -> new NotFoundException("User not found with userId: ", userId));
 	}
 
 }

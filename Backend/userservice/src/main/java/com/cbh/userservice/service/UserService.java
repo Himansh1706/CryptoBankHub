@@ -40,5 +40,7 @@ public interface UserService {
      * @return The user object representing the user with the specified email address.
      */
     User fetchUserByEmail(String email);
+    
+    String getKycStatus(String userId);
 }
 

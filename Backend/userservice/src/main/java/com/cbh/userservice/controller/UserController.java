@@ -66,5 +66,11 @@ public class UserController {
         return ResponseEntity.ok(userService.fetchUserById(userId));
     }
     
+    @GetMapping("/kyc/{userId}")
+    @Operation(tags = "Get kyc status")
+    public ResponseEntity<String> kycStatus(@PathVariable String userId) {
+        return ResponseEntity.ok(userService.getKycStatus(userId));
+    }
+    
 }
 

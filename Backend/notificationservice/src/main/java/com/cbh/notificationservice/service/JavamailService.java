@@ -1,9 +1,8 @@
 package com.cbh.notificationservice.service;
 
-import jakarta.mail.MessagingException;
-
 public interface JavamailService {
 	
-	public void sendEmail(String recipientEmail, String subject, Integer generatedEmailOtp) throws MessagingException;
+	public void sendEmail(String recipientEmail, String subject, Integer generatedEmailOtp);
 
+	public void sendNotification(String recipientEmail, String subject, String message);
 }

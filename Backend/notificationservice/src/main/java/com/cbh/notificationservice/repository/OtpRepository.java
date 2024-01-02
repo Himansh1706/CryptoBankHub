@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.cbh.notificationservice.model.Otp;
 
-public interface OtpRepository extends MongoRepository<Otp, String> {
+public interface OtpRepository extends MongoRepository<Otp, Integer> {
 
 	Optional<Otp> findByEmail(String email);
 

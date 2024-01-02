@@ -58,6 +58,17 @@
 			<artifactId>modelmapper</artifactId>
 			<version>3.1.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.cbh.exceptionservice</groupId>
+			<artifactId>exceptionservice</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.cryptobankhub</groupId>
+			<artifactId>kafkaservice</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 		<!--
 		https://mvnrepository.com/artifact/org.springframework/spring-webflux -->
 		<dependency>

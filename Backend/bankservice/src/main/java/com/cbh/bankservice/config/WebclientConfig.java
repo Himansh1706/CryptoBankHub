@@ -5,11 +5,14 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ClientRequest;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -99,7 +102,29 @@ public class WebclientConfig {
 	     * @return Response of the specified type
 	     */
 	    public <T> T get(String url, Class<T> responseType) {
-	        return webclient().get().uri(url).retrieve().bodyToMono(responseType).block();
+	        return webclient().get().uri(url)
+	                .retrieve()
+	                .bodyToMono(responseType)
+	                .onErrorResume(throwable -> handleErrorResponse(throwable, responseType))
+	                .block();
+	    }
+	    
+	    private <T> Mono<? extends T> handleErrorResponse(Throwable throwable, Class<T> responseType) {
+	        if (throwable instanceof WebClientResponseException) {
+	            WebClientResponseException responseException = (WebClientResponseException) throwable;
+	            HttpStatus statusCode = (HttpStatus) responseException.getStatusCode();
+
+	            if (statusCode.is4xxClientError() && statusCode != HttpStatus.NOT_FOUND) {
+	                log.warn("Client error: {} {}", statusCode, responseException.getHeaders());
+	                return Mono.error(new RuntimeException("Client error: " + statusCode.value()));
+	            } else if (statusCode == HttpStatus.NOT_FOUND) {
+	                log.warn("404 Not Found error occurred. Returning Mono.empty()");
+	                return Mono.empty();  // Handle 404 by returning an empty Mono or another default value
+	            }
+	        }
+
+	        log.error("Unhandled error: {}", throwable.getMessage());
+	        return Mono.error(throwable);
 	    }
 
 	    /**

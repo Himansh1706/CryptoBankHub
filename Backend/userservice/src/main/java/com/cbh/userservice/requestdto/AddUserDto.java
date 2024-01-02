@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddUserDto {
+	
 	private String name;
     private String email;
     private String mobileNumber;

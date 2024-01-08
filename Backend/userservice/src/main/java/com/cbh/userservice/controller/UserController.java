@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cbh.userservice.models.User;
 import com.cbh.userservice.requestdto.AddUserDto;
 import com.cbh.userservice.requestdto.DoKycDto;
+import com.cbh.userservice.responsedto.KycStatusResponseDto;
 import com.cbh.userservice.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -68,7 +69,7 @@ public class UserController {
     
     @GetMapping("/kyc/{userId}")
     @Operation(tags = "Get kyc status")
-    public ResponseEntity<String> kycStatus(@PathVariable String userId) {
+    public ResponseEntity<KycStatusResponseDto> kycStatus(@PathVariable String userId) {
         return ResponseEntity.ok(userService.getKycStatus(userId));
     }
     

@@ -9,6 +9,7 @@ import com.cbh.userservice.models.User;
 import com.cbh.userservice.repository.UserRepository;
 import com.cbh.userservice.requestdto.AddUserDto;
 import com.cbh.userservice.requestdto.DoKycDto;
+import com.cbh.userservice.responsedto.KycStatusResponseDto;
 import com.cbh.userservice.service.UserService;
 import com.cbh.userservice.util.Constant;
 import java.util.Objects;
@@ -48,9 +49,9 @@ public class UserServiceImpl implements UserService{
 		return user;
 	}
 	
-	public String getKycStatus(String userId) {
+	public KycStatusResponseDto getKycStatus(String userId) {
 		User user=fetchUserById(userId);
-		return user.getKycStatus();
+		return new KycStatusResponseDto(user.getEmail(),user.getKycStatus());
 	}
 	
 	public User fetchUserByEmail(String email) {

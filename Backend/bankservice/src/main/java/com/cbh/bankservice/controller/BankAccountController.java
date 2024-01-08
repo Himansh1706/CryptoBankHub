@@ -78,7 +78,7 @@ public class BankAccountController {
      * @return ResponseEntity with the list of BankAccount entities.
      */
     @GetMapping("/{userId}")
-    @Operation(tags = "Get all Bank accounts of user id.")
+    @Operation(tags = "Get all Bank accounts of specific user id.")
     public ResponseEntity<List<BankAccount>> bankAccounts(@PathVariable String userId) {
         return ResponseEntity.ok(bankAccountService.getBankAccounts(userId));
     }

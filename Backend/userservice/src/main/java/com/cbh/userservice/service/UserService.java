@@ -3,6 +3,7 @@ package com.cbh.userservice.service;
 import com.cbh.userservice.models.User;
 import com.cbh.userservice.requestdto.AddUserDto;
 import com.cbh.userservice.requestdto.DoKycDto;
+import com.cbh.userservice.responsedto.KycStatusResponseDto;
 
 /**
  * Service interface for managing user-related operations.
@@ -41,6 +42,6 @@ public interface UserService {
      */
     User fetchUserByEmail(String email);
     
-    String getKycStatus(String userId);
+    KycStatusResponseDto getKycStatus(String userId);
 }
 

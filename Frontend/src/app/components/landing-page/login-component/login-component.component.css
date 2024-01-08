@@ -1,0 +1,67 @@
+
+.right-div-login-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin-right: 160px;
+  }
+  
+  .right-div-login-box div {
+    margin-top: 25px;
+  }
+  
+  .heading-box h4 {
+    color: #827272;
+    font-weight: 600;
+    text-transform: uppercase;
+    line-height: 45px;
+    margin-bottom: 15%;
+    font-size: 25px;
+  }
+  
+  .input-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .input-box input {
+    border: none;
+    outline: none;
+    background: none;
+    margin-left: 15px;
+    padding-left: 5px;
+    padding-right: 5px;
+    /* font-size: 20px; */
+  }
+  
+  .login-btn button {
+    background-color: #3886f7;
+    border: none;
+    color: #fff;
+    width: 100%;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+  
+  .login-btn button:hover {
+    background-color: #3888f7d6;
+    transition: ease-in-out;
+    transition-duration: 400ms;
+    transform: scale(1.02);
+  }
+  
+  .divider-line {
+    border-top: #827272 5px solid;
+    width: 50%;
+    margin: auto;
+    border-radius: 5px;
+  }
+  
+  .create-new-account-box a {
+    text-decoration: none;
+    font-size: 20px;
+    text-transform: capitalize;
+    color: #827272;
+  }
